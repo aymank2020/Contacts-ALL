@@ -1,7 +1,6 @@
 package com.hadi.mustafaall;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +24,10 @@ public class ContactsFragment extends Fragment {
 
     private List<Contact> contacts = new ArrayList<>();
 
-    private Context context;
-
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        contacts.clear();
 
         contacts.add(new Contact("Hadi", "+201128282353"));
         contacts.add(new Contact("Moustafa", "+201128282353"));
@@ -59,7 +56,7 @@ public class ContactsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
 
         contactsRv = rootView.findViewById(R.id.contacts_rv);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false);
         contactsRv.setLayoutManager(layoutManager);
 
         contactsAdapter = new ContactsAdapter(contacts);
@@ -67,6 +64,14 @@ public class ContactsFragment extends Fragment {
         contactsRv.setAdapter(contactsAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        contactsRv.setAdapter(null);
+        contactsRv = null;
+        contactsAdapter = null;
+        super.onDestroyView();
     }
 
 }
